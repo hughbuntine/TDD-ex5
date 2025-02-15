@@ -1,35 +1,43 @@
-version: "2"
+version: "3"
+
 services:
-  web:
+  frontend:
     build:
-      context: frontend
+      context: ./frontend
       dockerfile: Dockerfile
     image: webapp-frontend
     environment:
-      API_URL: http://api:80
-    mem_reservation: 10m
-    mem_limit: 20m
+      - API_URL=http://backend:3001
     ports:
-      - "127.0.0.1:8080:80"
+      - "3000:3000"  # Expose frontend on port 8080
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    command: ["npm", "start"]
+    mem_reservation: 100m
+    mem_limit: 512m
 
-  api:
+  backend:
     build:
-      context: backend
+      context: ./backend
       dockerfile: Dockerfile
     image: webapp-backend
     environment:
-      DATABASE_URL: jdbc:postgresql://db:5432/webapp?user=webapp&password=secret
-    mem_reservation: 100m
-    mem_limit: 200m
+      - DATABASE_URL=jdbc:postgresql://db:5432/webapp?user=webapp&password=secret
     ports:
-      - "127.0.0.1:8081:80"
+      - "3001:3001"
+    volumes:
+      - ./backend:/usr/src/app
+    command: ["npm", "run", "dev"]
+    mem_reservation: 256m
+    mem_limit: 512m
 
   db:
     image: postgres:13
     environment:
-      POSTGRES_USER: webapp
-      POSTGRES_PASSWORD: secret
+      - POSTGRES_USER=webapp
+      - POSTGRES_PASSWORD=secret
+    ports:
+      - "5432:5432"
     mem_reservation: 100m
     mem_limit: 200m
-    ports:
-      - "127.0.0.1:5432:5432"
