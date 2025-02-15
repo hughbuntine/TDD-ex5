@@ -28,6 +28,7 @@ services:
       - "3001:3001"
     volumes:
       - ./backend:/usr/src/app
+      - /usr/src/app/node_modules
     command: ["npm", "run", "dev"]
     mem_reservation: 256m
     mem_limit: 512m
