@@ -1,13 +1,14 @@
-import './App.css';
 import React from 'react';
+import Entry from './components/Entry';
 
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
+    <div>
+      <header>
         TO-DO LIST
       </header>
+      <Entry />
     </div>
   );
 }
