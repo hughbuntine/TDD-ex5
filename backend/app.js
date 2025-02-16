@@ -13,8 +13,6 @@ mongoose.connect(process.env.MONGO_URI, {
 
 const app = express();
 
-const todosRoutes = require('./routes/todos');
-app.use('/api/todos', todosRoutes);
 
 // Middleware
 app.use(cors());
@@ -23,15 +21,6 @@ app.use(express.json());
 // Routes
 app.get('/', (req, res) => {
   res.send('Hello World');
-});
-
-app.get('/api/todos', async (req, res) => {
-  try {
-    const todos = await Todo.find();
-    res.json(todos);
-  } catch (err) {
-    res.status(500).send(err);
-  }
 });
 
 

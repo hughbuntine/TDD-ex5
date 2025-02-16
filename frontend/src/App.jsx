@@ -7,7 +7,7 @@ function App() {
 
   // FUNCTIONS
   function addTask () {
-    console.log(newTask);
+    console.log(newTask); // TODO: make this actually add a task
   }
 
   return (
