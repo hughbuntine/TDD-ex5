@@ -38,5 +38,5 @@ beforeEach(() => {
     test('renders a rename button', () => {
         const renameElement = screen.getByTestId('renameButton');
         expect(renameElement).toBeInTheDocument();
-      });
+        });
 });

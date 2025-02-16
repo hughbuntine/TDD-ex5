@@ -23,7 +23,7 @@ services:
       dockerfile: Dockerfile
     image: webapp-backend
     environment:
-      - DATABASE_URL=jdbc:postgresql://db:5432/webapp?user=webapp&password=secret
+      - MONGO_URI=mongodb://mongo:27017/todolist
     ports:
       - "3001:3001"
     volumes:
@@ -33,12 +33,16 @@ services:
     mem_reservation: 256m
     mem_limit: 512m
 
-  db:
-    image: postgres:13
-    environment:
-      - POSTGRES_USER=webapp
-      - POSTGRES_PASSWORD=secret
+  mongo:
+    image: mongo:latest
+    container_name: mongo
     ports:
-      - "5432:5432"
-    mem_reservation: 100m
-    mem_limit: 200m
+      - "27017:27017"
+    volumes:
+      - ./data/db:/data/db
+    networks:
+      - backend_network
+
+networks:
+  backend_network:
+    driver: bridge
