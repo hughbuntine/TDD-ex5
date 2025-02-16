@@ -9,9 +9,9 @@ const Entry = (props) => {
 
   return (
     <div>
+        <button data-testid="renameButton">Rename</button>
         <span data-testid="toDoEntry">{props.text}</span>
         <input type="checkbox" checked={isChecked} onChange={handleCheckboxChange}/>
-        <button data-testid="renameButton">Rename</button>
     </div>
   );
 };
