@@ -1,9 +1,12 @@
-// models/Todo.js
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const todoSchema = new mongoose.Schema({
-  text: String,
+  text: {
+    type: String,
+    required: true,
+  },
 });
 
-module.exports = mongoose.model('Todo', todoSchema);
+const Todo = mongoose.model('Todo', todoSchema);
 
+export default Todo; // This will allow the default import in app.js

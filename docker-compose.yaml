@@ -9,7 +9,7 @@ services:
     environment:
       - API_URL=http://backend:3001
     ports:
-      - "3000:3000"  # Expose frontend on port 8080
+      - "3000:3000" 
     volumes:
       - ./frontend:/app
       - /app/node_modules
