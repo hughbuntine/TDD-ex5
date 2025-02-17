@@ -53,24 +53,6 @@ app.get('/todos', async (req, res) => {
   }
 });
 
-
-app.put('/todos/:id', async (req, res) => {
-  const { id } = req.params;
-  const { text } = req.body;
-
-  try {
-    const updatedTodo = await Todo.findByIdAndUpdate(id, { text }, { new: true });
-
-    if (!updatedTodo) {
-      return res.status(404).json({ message: 'Todo not found' });
-    }
-
-    res.json(updatedTodo);
-  } catch (err) {
-    res.status(500).json({ message: 'Error updating todo' });
-  }
-});
-
 app.delete('/todos/:id', async (req, res) => {
   const { id } = req.params;
 
@@ -84,6 +66,47 @@ app.delete('/todos/:id', async (req, res) => {
     res.json({ message: 'Todo deleted successfully' });
   } catch (err) {
     res.status(500).json({ message: 'Error deleting todo' });
+  }
+});
+
+app.patch('/todos/:id', async (req, res) => {
+  try {
+    // Find the todo by ID
+    const todo = await Todo.findById(req.params.id);
+
+    if (!todo) {
+      return res.status(404).json({ message: 'Task not found' });
+    }
+
+    // Toggle the completed value (if true, set to false; if false, set to true)
+    todo.completed = !todo.completed;
+
+    // Save the updated todo
+    const updatedTodo = await todo.save();
+
+    // Respond with the updated todo
+    res.json(updatedTodo);
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error });
+  }
+});
+
+app.put('/todos/:id', async (req, res) => {
+  try {
+    const { text } = req.body; // Get the new text from the request body
+    const todo = await Todo.findByIdAndUpdate(
+      req.params.id,
+      { text }, // Update the text
+      { new: true } // Return the updated document
+    );
+
+    if (!todo) {
+      return res.status(404).json({ message: 'Task not found' });
+    }
+
+    res.json(todo);
+  } catch (error) {
+    res.status(500).json({ message: 'Error updating task', error });
   }
 });
 

@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 
-const ArchivedEntry = (props) => {
+const ArchivedEntry = ({text, onComplete}) => {
 
   return (
     <div>
-        <span data-testid="ArchivedEntry">{props.text}</span>
+        <span data-testid="ArchivedEntry">{text}</span>
+        <button onClick={onComplete}>Undo</button>
+
     </div>
   );
 };

@@ -110,7 +110,7 @@ describe('GET /todos', () => {
   
           // Assert: Check the response
           expect(response.status).toBe(404);
-          expect(response.body.message).toBe('Todo not found');
+          expect(response.body.message).toBe('Task not found');
   
           // Clean up
           updateStub.mockRestore();
@@ -127,7 +127,7 @@ describe('GET /todos', () => {
   
           // Assert: Check the response
           expect(response.status).toBe(500);
-          expect(response.body.message).toBe('Error updating todo');
+          expect(response.body.message).toBe('Error updating task');
   
           // Clean up
           updateStub.mockRestore();
