@@ -23,7 +23,7 @@ services:
       dockerfile: Dockerfile
     image: webapp-backend
     environment:
-      - MONGO_URI=mongodb://mongo:27017/todolist
+      - MONGO_URI=mongodb://mongo:27017/tododb
     ports:
       - "3001:3001"
     volumes:
@@ -32,10 +32,12 @@ services:
     command: ["npm", "run", "dev"]
     mem_reservation: 256m
     mem_limit: 512m
+    networks:
+      - backend_network
 
   mongo:
     image: mongo:latest
-    container_name: mongo
+    container_name: mongodb
     ports:
       - "27017:27017"
     volumes:

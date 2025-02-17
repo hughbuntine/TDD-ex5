@@ -78,4 +78,112 @@ describe('GET /todos', () => {
         findStub.mockRestore();
     });
   });
+  
+  describe('PUT /todos/:id', () => {
+      it('should update an existing todo', async () => {
+          // Arrange: Mock findByIdAndUpdate to return an updated todo
+          const fakeUpdatedTodo = { _id: '123', text: 'Updated Todo' };
+          const updateStub = vi.spyOn(Todo, 'findByIdAndUpdate').mockResolvedValue(fakeUpdatedTodo);
+  
+          // Act: Send a PUT request
+          const response = await request(app)
+              .put('/todos/123')
+              .send({ text: 'Updated Todo' });
+  
+          // Assert: Check the response
+          expect(response.status).toBe(200);
+          expect(response.body.text).toBe('Updated Todo');
+          expect(updateStub).toHaveBeenCalledWith('123', { text: 'Updated Todo' }, { new: true });
+  
+          // Clean up
+          updateStub.mockRestore();
+      });
+  
+      it('should return 404 if the todo is not found', async () => {
+          // Arrange: Mock findByIdAndUpdate to return null (not found)
+          const updateStub = vi.spyOn(Todo, 'findByIdAndUpdate').mockResolvedValue(null);
+  
+          // Act: Send a PUT request
+          const response = await request(app)
+              .put('/todos/123')
+              .send({ text: 'Updated Todo' });
+  
+          // Assert: Check the response
+          expect(response.status).toBe(404);
+          expect(response.body.message).toBe('Todo not found');
+  
+          // Clean up
+          updateStub.mockRestore();
+      });
+  
+      it('should return 500 if there is an error', async () => {
+          // Arrange: Mock findByIdAndUpdate to throw an error
+          const updateStub = vi.spyOn(Todo, 'findByIdAndUpdate').mockRejectedValue(new Error('Test Error'));
+  
+          // Act: Send a PUT request
+          const response = await request(app)
+              .put('/todos/123')
+              .send({ text: 'Updated Todo' });
+  
+          // Assert: Check the response
+          expect(response.status).toBe(500);
+          expect(response.body.message).toBe('Error updating todo');
+  
+          // Clean up
+          updateStub.mockRestore();
+      });
+  });
 
+describe('DELETE /todos/:id', () => {
+    it('should delete an existing todo', async () => {
+        // Arrange: Mock findByIdAndDelete to return a deleted todo
+        const fakeDeletedTodo = { _id: '123', text: 'Test Todo' };
+        const deleteStub = vi.spyOn(Todo, 'findByIdAndDelete').mockResolvedValue(fakeDeletedTodo);
+
+        // Act: Send a DELETE request
+        const response = await request(app)
+            .delete('/todos/123');
+
+        // Assert: Check the response
+        expect(response.status).toBe(200);
+        expect(response.body.message).toBe('Todo deleted successfully');
+        expect(deleteStub).toHaveBeenCalledWith('123');
+
+        // Clean up
+        deleteStub.mockRestore();
+    });
+
+    it('should return 404 if the todo is not found', async () => {
+        // Arrange: Mock findByIdAndDelete to return null (not found)
+        const deleteStub = vi.spyOn(Todo, 'findByIdAndDelete').mockResolvedValue(null);
+
+        // Act: Send a DELETE request
+        const response = await request(app)
+            .delete('/todos/123');
+
+        // Assert: Check the response
+        expect(response.status).toBe(404);
+        expect(response.body.message).toBe('Todo not found');
+
+        // Clean up
+        deleteStub.mockRestore();
+    });
+
+    it('should return 500 if there is an error', async () => {
+        // Arrange: Mock findByIdAndDelete to throw an error
+        const deleteStub = vi.spyOn(Todo, 'findByIdAndDelete').mockRejectedValue(new Error('Test Error'));
+
+        // Act: Send a DELETE request
+        const response = await request(app)
+            .delete('/todos/123');
+
+        // Assert: Check the response
+        expect(response.status).toBe(500);
+        expect(response.body.message).toBe('Error deleting todo');
+
+        // Clean up
+        deleteStub.mockRestore();
+    });
+});
+
+  

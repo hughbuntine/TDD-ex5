@@ -14,6 +14,10 @@ mongoose.connect(process.env.MONGO_URI, {
   .then(() => console.log('Connected to MongoDB'))
   .catch(err => console.log('MongoDB connection error: ', err));
 
+mongoose.connection.on('error', (err) => {
+  console.log('MongoDB connection error:', err);
+});
+
 const app = express();
 
 
@@ -41,18 +45,53 @@ app.post('/todos', async (req, res) => {
 app.get('/todos', async (req, res) => {
   try {
     const todos = await Todo.find();
+    console.log("Fetched todos:", todos); // Log fetched todos
     res.json(todos);
-  }
-  catch (err) {
+  } catch (err) {
+    console.error("Error fetching todos:", err); // Log the full error
     res.status(500).json({ message: 'Error fetching todos' });
   }
-  }
-);
+});
 
+
+app.put('/todos/:id', async (req, res) => {
+  const { id } = req.params;
+  const { text } = req.body;
+
+  try {
+    const updatedTodo = await Todo.findByIdAndUpdate(id, { text }, { new: true });
+
+    if (!updatedTodo) {
+      return res.status(404).json({ message: 'Todo not found' });
+    }
+
+    res.json(updatedTodo);
+  } catch (err) {
+    res.status(500).json({ message: 'Error updating todo' });
+  }
+});
+
+app.delete('/todos/:id', async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const deletedTodo = await Todo.findByIdAndDelete(id);
+
+    if (!deletedTodo) {
+      return res.status(404).json({ message: 'Todo not found' });
+    }
+
+    res.json({ message: 'Todo deleted successfully' });
+  } catch (err) {
+    res.status(500).json({ message: 'Error deleting todo' });
+  }
+});
 
 
 // Start the server
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+
+
 
 export default app;

@@ -1,0 +1,4 @@
+db.todos.find().pretty()
+show collections
+use tododb
+show dbs
